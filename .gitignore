@@ -1,0 +1,10 @@
+# Local backups (dated .bak-* files and the .backup/ folder)
+*.bak
+*.bak-*
+.backup/
+
+# OS / editor clutter
+.DS_Store
+Thumbs.db
+*.swp
+*~
