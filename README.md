@@ -38,11 +38,13 @@ mots. Aucun exercice. Les figures gardent leurs curseurs de réglage.
 
 ## Navigation
 
-`←` `→` / Espace pour changer de diapo, `M` pour le sommaire de la classe, `F` en plein
+`←` `→` / Espace pour changer de diapo, `M` pour le sommaire du chapitre, `F` en plein
 écran, `N` pour la page blanche de notes, `Échap` pour fermer.
 
-Le bouton **⌂ Accueil** de la barre du haut ramène au choix des sections ; le sommaire
-(`M`) ne liste que la classe en cours, chapitre par chapitre.
+Le fil d’Ariane en haut à gauche remonte au **sommaire de la classe** (`Première Spé`),
+puis à **l’accueil** (`Maths`). Un chapitre est autonome : la dernière diapo atteinte,
+le diaporama s’arrête ; on ressort par le fil d’Ariane pour ouvrir un autre chapitre.
+Le sommaire (`M`) ne liste que les diapos du chapitre ouvert.
 
 ## Graphiques
 
@@ -68,7 +70,7 @@ Le dessin est mémorisé en coordonnées « monde » et conservé quand on ferme
 | --- | --- |
 | `index.html` | accueil : les quatre sections |
 | `niveau.html` | sommaire d’une section (`?n=premiere`) |
-| `cours.html` | diaporama (`?n=premiere#second-degre`) |
+| `cours.html` | diaporama d’un chapitre (`?n=premiere&c=second-degre`) |
 | `styles.css` | thème sombre chaud, mises en page, zoom des figures |
 | `js/catalogue.js` | sections, chapitres et ordre des chapitres |
 | `js/hub.js`, `js/level.js` | rendu de l’accueil et des sommaires |

@@ -9,12 +9,16 @@
 </head>
 <body>
   <header class="topbar">
-    <a class="brand" href="index.html"><span class="brand-mark">∴</span><span>Maths <em id="level-name">…</em></span></a>
-    <nav class="chapters" id="chapters" aria-label="Chapitres"></nav>
+    <nav class="crumbs" aria-label="Fil d’Ariane">
+      <a href="index.html">Maths</a>
+      <span class="crumb-sep" aria-hidden="true">/</span>
+      <a id="crumb-level" href="index.html">…</a>
+      <span class="crumb-sep" aria-hidden="true">/</span>
+      <span class="crumb-here" id="crumb-chapter">…</span>
+    </nav>
     <div class="topright">
       <span class="counter" id="counter">1 / 1</span>
       <button class="btn ghost small" id="menu-btn" type="button" aria-expanded="false" aria-controls="menu">Sommaire <kbd>M</kbd></button>
-      <a class="btn ghost small" href="index.html" title="Retour à l’accueil">⌂ Accueil</a>
     </div>
   </header>
 
@@ -26,7 +30,7 @@
 
   <footer class="toolbar">
     <button class="btn" id="prev" type="button">← Précédent</button>
-    <span class="hint"><kbd>←</kbd><kbd>→</kbd> naviguer · <kbd>M</kbd> sommaire · <kbd>F</kbd> plein écran · <kbd>N</kbd> note</span>
+    <span class="hint"><kbd>←</kbd><kbd>→</kbd> naviguer · <kbd>M</kbd> sommaire du chapitre · <kbd>F</kbd> plein écran · <kbd>N</kbd> note</span>
     <button class="btn primary" id="next" type="button">Suivant →</button>
   </footer>
 
@@ -34,7 +38,10 @@
     <div class="menu-panel" role="dialog" aria-modal="true" aria-label="Sommaire du cours">
       <div class="menu-head">
         <h2 id="menu-title">Sommaire</h2>
-        <button class="btn ghost small" id="menu-close" type="button">Fermer <kbd>Échap</kbd></button>
+        <div class="menu-head-actions">
+          <a class="btn ghost small" id="menu-level" href="niveau.html">Tous les chapitres</a>
+          <button class="btn ghost small" id="menu-close" type="button">Fermer <kbd>Échap</kbd></button>
+        </div>
       </div>
       <div class="menu-groups" id="menu-groups"></div>
     </div>

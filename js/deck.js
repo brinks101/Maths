@@ -7,12 +7,17 @@ window.MATHS_SLIDES = window.MATHS_SLIDES || [];
 
   const CATALOGUE = window.MATHS_COURS;
   const params = new URLSearchParams(location.search);
+  const HASH = decodeURIComponent(location.hash.replace(/^#/, ''));
   const NIVEAU = CATALOGUE
     ? CATALOGUE.niveau(params.get('n') || 'premiere')
     : { id: 'premiere', nom: 'Première Spé', chapitres: [] };
-  const CHAPITRES = (NIVEAU.chapitres || []).filter((c) =>
-    window.MATHS_SLIDES.some((s) => s.chapter === c.id),
-  );
+  // One deck = one chapter. The chapter comes from ?c=…, or from the hash
+  // (a chapter id, or the id of one of its slides).
+  const CHAPITRE_ID =
+    params.get('c') ||
+    (window.MATHS_SLIDES.find((s) => s.id === HASH) || {}).chapter ||
+    HASH;
+  const CHAPITRE = (NIVEAU.chapitres || []).find((c) => c.id === CHAPITRE_ID) || null;
   const $ = (sel, root) => (root || document).querySelector(sel);
 
   let slides = [];
@@ -81,14 +86,15 @@ window.MATHS_SLIDES = window.MATHS_SLIDES || [];
     prevBtn.disabled = index === 0;
     nextBtn.disabled = index === slides.length - 1;
 
-    document.querySelectorAll('#chapters .chip').forEach((b) => {
-      b.classList.toggle('active', b.dataset.chapter === slide.chapter);
-    });
     document.querySelectorAll('#menu-groups button').forEach((b) => {
       b.classList.toggle('active', b.dataset.index === String(index));
     });
 
-    history.replaceState(null, '', '#' + slide.id);
+    const url = new URL(location.href);
+    url.searchParams.set('n', NIVEAU.id);
+    url.searchParams.set('c', CHAPITRE.id);
+    url.hash = slide.id;
+    history.replaceState(null, '', url);
     stageEl.scrollTop = 0;
     closeMenu();
 
@@ -96,31 +102,37 @@ window.MATHS_SLIDES = window.MATHS_SLIDES || [];
     if (active && active !== document.body && typeof active.blur === 'function') active.blur();
   }
 
-  // Sommaire of the current class only: one group per chapter, slides numbered
-  // inside their chapter.
+  function next() {
+    if (index >= slides.length - 1) {
+      toast('Fin du chapitre — remonte au sommaire');
+      return;
+    }
+    go(index + 1);
+  }
+
+  function prev() {
+    go(index - 1);
+  }
+
+  // The deck holds a single chapter: the sommaire lists its slides only.
   function buildMenu() {
     groupsEl.innerHTML = '';
-    CHAPITRES.forEach((chapitre) => {
-      const group = document.createElement('div');
-      group.className = 'menu-group';
-      const title = document.createElement('h3');
-      title.textContent = chapitre.titre;
-      group.appendChild(title);
-      let count = 0;
-      slides.forEach((slide, i) => {
-        if (slide.chapter !== chapitre.id) return;
-        count += 1;
-        const button = document.createElement('button');
-        button.type = 'button';
-        button.dataset.index = String(i);
-        button.innerHTML =
-          `<span class="menu-num">${String(count).padStart(2, '0')}</span>` +
-          `<span>${slide.title}</span>`;
-        button.addEventListener('click', () => go(i));
-        group.appendChild(button);
-      });
-      groupsEl.appendChild(group);
+    const group = document.createElement('div');
+    group.className = 'menu-group';
+    const title = document.createElement('h3');
+    title.textContent = CHAPITRE.titre;
+    group.appendChild(title);
+    slides.forEach((slide, i) => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.dataset.index = String(i);
+      button.innerHTML =
+        `<span class="menu-num">${String(i + 1).padStart(2, '0')}</span>` +
+        `<span>${slide.title}</span>`;
+      button.addEventListener('click', () => go(i));
+      group.appendChild(button);
     });
+    groupsEl.appendChild(group);
   }
 
   function openMenu() {
@@ -414,13 +426,13 @@ window.MATHS_SLIDES = window.MATHS_SLIDES || [];
   }
 
   function init() {
-    // Catalogue order first, then the order the chapter file declares its slides.
-    slides = [];
-    CHAPITRES.forEach((chapitre) => {
-      window.MATHS_SLIDES.forEach((slide) => {
-        if (slide.chapter === chapitre.id) slides.push(slide);
-      });
-    });
+    // No chapter selected: the deck is not a browsing surface, send the reader
+    // back to the class sommaire.
+    if (!CHAPITRE) {
+      location.replace(`niveau.html?n=${encodeURIComponent(NIVEAU.id)}`);
+      return;
+    }
+    slides = window.MATHS_SLIDES.filter((slide) => slide.chapter === CHAPITRE.id);
     stageEl = $('#stage');
     slideEl = $('#slide');
     counterEl = $('#counter');
@@ -432,42 +444,31 @@ window.MATHS_SLIDES = window.MATHS_SLIDES || [];
     toastEl = $('#toast');
 
     document.body.dataset.niveau = NIVEAU.id;
-    document.title = `Maths — ${NIVEAU.nom}`;
-    const levelName = $('#level-name');
-    if (levelName) levelName.textContent = NIVEAU.nom;
+    document.title = `${CHAPITRE.titre} — ${NIVEAU.nom} — Maths`;
+    const crumbLevel = $('#crumb-level');
+    if (crumbLevel) {
+      crumbLevel.textContent = NIVEAU.nom;
+      crumbLevel.href = `niveau.html?n=${encodeURIComponent(NIVEAU.id)}`;
+    }
+    const crumbChapter = $('#crumb-chapter');
+    if (crumbChapter) crumbChapter.textContent = CHAPITRE.titre;
     const menuTitle = $('#menu-title');
-    if (menuTitle) menuTitle.textContent = `Sommaire · ${NIVEAU.nom}`;
-    const foot = $('#foot-level');
-    if (foot) foot.textContent = NIVEAU.nom;
+    if (menuTitle) menuTitle.textContent = `Sommaire · ${CHAPITRE.titre}`;
+    const menuLevel = $('#menu-level');
+    if (menuLevel) menuLevel.href = `niveau.html?n=${encodeURIComponent(NIVEAU.id)}`;
 
     window.M.toast = toast;
-    window.Deck = {
-      go,
-      next: () => go(index + 1),
-      prev: () => go(index - 1),
-    };
+    window.Deck = { go, next, prev };
 
     if (!slides.length) {
-      slideEl.innerHTML = '<div class="card">Aucune diapo chargée pour cette classe.</div>';
+      slideEl.innerHTML =
+        '<div class="card">Ce chapitre n’a pas encore de diapos. ' +
+        `<a href="niveau.html?n=${encodeURIComponent(NIVEAU.id)}">Retour au sommaire</a></div>`;
       return;
     }
 
-    const chaptersEl = $('#chapters');
-    CHAPITRES.forEach((chapitre) => {
-      const first = slides.findIndex((s) => s.chapter === chapitre.id);
-      if (first < 0) return;
-      const button = document.createElement('button');
-      button.type = 'button';
-      button.className = 'chip';
-      button.dataset.chapter = chapitre.id;
-      button.title = chapitre.titre;
-      button.innerHTML = `<span class="dot"></span>${chapitre.titre}`;
-      button.addEventListener('click', () => go(first));
-      chaptersEl.appendChild(button);
-    });
-
-    prevBtn.addEventListener('click', () => go(index - 1));
-    nextBtn.addEventListener('click', () => go(index + 1));
+    prevBtn.addEventListener('click', prev);
+    nextBtn.addEventListener('click', next);
     $('#menu-btn').addEventListener('click', toggleMenu);
     $('#menu-close').addEventListener('click', closeMenu);
     menuEl.addEventListener('click', (event) => {
@@ -510,10 +511,10 @@ window.MATHS_SLIDES = window.MATHS_SLIDES || [];
 
       if (event.key === 'ArrowRight' || event.key === 'PageDown' || event.key === ' ') {
         event.preventDefault();
-        go(index + 1);
+        next();
       } else if (event.key === 'ArrowLeft' || event.key === 'PageUp') {
         event.preventDefault();
-        go(index - 1);
+        prev();
       } else if (event.key === 'Home') {
         event.preventDefault();
         go(0);
@@ -546,7 +547,7 @@ window.MATHS_SLIDES = window.MATHS_SLIDES || [];
         if (touchX == null || !event.changedTouches[0]) return;
         const dx = event.changedTouches[0].clientX - touchX;
         touchX = null;
-        if (Math.abs(dx) > 70) go(index + (dx < 0 ? 1 : -1));
+        if (Math.abs(dx) > 70) (dx < 0 ? next : prev)();
       },
       { passive: true },
     );
@@ -555,12 +556,7 @@ window.MATHS_SLIDES = window.MATHS_SLIDES || [];
       if (!document.fullscreenElement) clearGraphFocus();
     });
 
-    const fromHash = decodeURIComponent(location.hash.replace(/^#/, ''));
-    let start = slides.findIndex((s) => s.id === fromHash);
-    if (start < 0 && fromHash) {
-      const chapter = CHAPITRES.find((c) => c.id === fromHash);
-      if (chapter) start = slides.findIndex((s) => s.chapter === chapter.id);
-    }
+    const start = slides.findIndex((s) => s.id === HASH);
     go(start >= 0 ? start : 0);
   }
 

@@ -21,7 +21,7 @@
     const li = document.createElement('li');
     const a = document.createElement('a');
     a.className = 'chapter-row';
-    a.href = `cours.html?n=${encodeURIComponent(niveau.id)}#${encodeURIComponent(chapitre.id)}`;
+    a.href = `cours.html?n=${encodeURIComponent(niveau.id)}&c=${encodeURIComponent(chapitre.id)}`;
     a.innerHTML =
       `<span class="chapter-num">${String(i + 1).padStart(2, '0')}</span>` +
       `<span class="chapter-name"><strong>${chapitre.titre}</strong><small>${chapitre.resume}</small></span>` +

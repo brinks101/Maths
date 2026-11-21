@@ -27,6 +27,7 @@ body {
   height: 100dvh;
   overflow: hidden;
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   grid-template-rows: auto auto 1fr auto;
   color: var(--ink);
   font-family: var(--serif);
@@ -53,6 +54,7 @@ body[data-chapter="trigo"] {
   display: flex;
   align-items: center;
   gap: 18px;
+  min-width: 0;
   padding: 12px clamp(14px, 3vw, 34px);
   border-bottom: 1px solid var(--line-soft);
   background: rgba(20, 17, 16, 0.72);
@@ -82,34 +84,35 @@ body[data-chapter="trigo"] {
   font-size: 0.95rem;
 }
 
-.chapters { display: flex; gap: 6px; flex: 1; flex-wrap: wrap; }
-
-.chip {
-  display: inline-flex;
+/* Notion-style breadcrumb: class sommaire ← chapter. */
+.crumbs {
+  display: flex;
   align-items: center;
-  gap: 7px;
-  padding: 6px 12px;
-  border-radius: 999px;
-  border: 1px solid transparent;
-  background: transparent;
+  gap: 6px;
+  flex: 1;
+  min-width: 0;
+  font-family: var(--sans);
+  font-size: 0.86rem;
   color: var(--muted);
-  font: inherit;
-  font-size: 0.82rem;
-  cursor: pointer;
-  transition: color 0.15s, background 0.15s, border-color 0.15s;
 }
-.chip .dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: currentColor;
-  opacity: 0.55;
+.crumbs a {
+  padding: 3px 2px;
+  border-radius: 6px;
+  color: var(--muted);
+  text-decoration: none;
+  white-space: nowrap;
 }
-.chip:hover { color: var(--ink); background: var(--card); }
-.chip.active { color: var(--ink); border-color: var(--line); background: var(--card); }
-.chip.active .dot { background: var(--accent); opacity: 1; }
+.crumbs a:hover { color: var(--ink); background: var(--card); }
+.crumb-sep { color: var(--line); }
+.crumb-here {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--ink);
+}
 
-.topright { display: flex; align-items: center; gap: 12px; }
+.topright { display: flex; align-items: center; gap: 12px; margin-left: auto; }
 .counter {
   font-size: 0.8rem;
   color: var(--muted);
@@ -951,7 +954,6 @@ body.graph-focus { overflow: hidden; }
   .grid2, .grid2.wide-left { grid-template-columns: 1fr; }
   .cards3 { grid-template-columns: 1fr; }
   .menu-groups { grid-template-columns: 1fr; }
-  .chapters { order: 3; flex-basis: 100%; }
   .topbar { flex-wrap: wrap; gap: 8px 14px; }
   .slide { padding-bottom: 40px; }
 }
@@ -1501,19 +1503,7 @@ body[data-niveau="expertes"] { --accent: #8fcbb6; --accent-soft: rgba(143, 203, 
 .code .num { color: #8fcbb6; }
 .code .com { color: var(--muted); font-style: italic; }
 
-/* Topbar with many chapters: one scrollable row instead of a tall stack. */
-.chapters {
-  flex-wrap: nowrap;
-  overflow-x: auto;
-  overflow-y: hidden;
-  scrollbar-width: thin;
-  padding: 2px 0;
-}
-.chapters .chip { white-space: nowrap; flex: none; max-width: 220px; }
-.chapters .chip span:last-child {
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
+.menu-head-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 
 @media (max-width: 1000px) {
   .slide-body.with-plot { grid-template-columns: minmax(0, 1fr); }
