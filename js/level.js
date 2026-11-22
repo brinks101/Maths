@@ -29,4 +29,8 @@
     li.appendChild(a);
     list.appendChild(li);
   });
+
+  // Read the list down the columns, like a book contents page: 1–7 on the
+  // left, 8–14 on the right, instead of 1, 2 / 3, 4 across the rows.
+  list.style.setProperty('--chapter-rows', String(Math.ceil(niveau.chapitres.length / 2)));
 })();

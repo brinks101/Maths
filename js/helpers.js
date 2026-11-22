@@ -22,6 +22,85 @@ window.M = (function () {
     return `<span class="sqrt"><span class="rad">${radicand}</span></span>`;
   }
 
+  // Matrix with real brackets. rows is an array of arrays; opts.sep puts a
+  // dashed separator before one column (augmented matrices).
+  function mat(rows, opts) {
+    const o = opts || {};
+    const lines = rows.map((row) => [].concat(row));
+    const cols = Math.max(...lines.map((row) => row.length));
+    const sep = o.sep == null ? -1 : o.sep;
+    const tag = o.interactive ? 'button' : 'span';
+    const type = o.interactive ? ' type="button"' : '';
+    const cells = lines
+      .map((row, i) => {
+        const padded = row.concat(Array(cols - row.length).fill(''));
+        return padded
+          .map((cell, j) => {
+            const cls =
+              'mat-cell' +
+              (j === sep ? ' mat-sep' : '') +
+              (o.interactive ? ' is-clickable' : '');
+            return `<${tag}${type} class="${cls}" data-i="${i}" data-j="${j}">${cell}</${tag}>`;
+          })
+          .join('');
+      })
+      .join('');
+    return (
+      `<span class="matrix${o.className ? ' ' + o.className : ''}"` +
+      (o.name ? ` data-mat="${o.name}"` : '') +
+      (o.label ? ` role="img" aria-label="${o.label}"` : '') +
+      ` style="--mat-cols:${cols}">` +
+      `<span class="mat-bracket" aria-hidden="true"></span>` +
+      `<span class="mat-grid">${cells}</span>` +
+      `<span class="mat-bracket" aria-hidden="true"></span>` +
+      `</span>`
+    );
+  }
+
+  // Large integral sign with stacked bounds: ∫_a^b.
+  function integral(a, b) {
+    const bounds =
+      a == null && b == null
+        ? ''
+        : `<span class="int-limits">` +
+          `<span class="int-up">${b == null ? '' : b}</span>` +
+          `<span class="int-down">${a == null ? '' : a}</span>` +
+          `</span>`;
+    return `<span class="integral"><span class="int-sign">∫</span>${bounds}</span>`;
+  }
+
+  // [F(x)]_a^b, with the evaluation bounds stacked on the right.
+  function evalAt(body, a, b) {
+    return (
+      `<span class="eval"><span class="eval-body">${body}</span>` +
+      `<span class="eval-limits"><span>${b}</span><span>${a}</span></span></span>`
+    );
+  }
+
+  // Big sigma with stacked bounds.
+  function sum(a, b) {
+    return (
+      `<span class="sum"><span class="sum-sign">Σ</span>` +
+      `<span class="sum-limits"><span>${b}</span><span>${a}</span></span></span>`
+    );
+  }
+
+  // Turn the compact ∫<sub>a</sub><sup>b</sup> notation used in the course
+  // files into a proper display integral, once, at render time.
+  function pretty(html) {
+    let out = String(html == null ? '' : html);
+    out = out.replace(/∫<sub>([^<]*)<\/sub><sup>([^<]*)<\/sup>/g, (_, a, b) => integral(a, b));
+    out = out.replace(
+      /\[([^\]]+)\]<sub>([^<]*)<\/sub><sup>([^<]*)<\/sup>/g,
+      (_, body, a, b) => evalAt(body, a, b),
+    );
+    out = out.replace(/Σ<sub>([^<]*)<\/sub><sup>([^<]*)<\/sup>/g, (_, a, b) => sum(a, b));
+    // A bare ∫ (linearity, notation) also gets the display treatment, unless
+    // it already belongs to a generated .int-sign.
+    out = out.replace(/(?<!int-sign">)∫/g, '<span class="int-standalone">∫</span>');
+    return out;
+  }
+
   // Polynomial html: a x² + b x + c, skipping zero coefficients.
   function poly(a, b, c, v = 'x') {
     const terms = [];
@@ -281,6 +360,11 @@ window.M = (function () {
     com,
     frac,
     sqrt,
+    mat,
+    integral,
+    evalAt,
+    sum,
+    pretty,
     poly,
     head,
     randInt,

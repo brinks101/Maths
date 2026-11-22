@@ -1059,7 +1059,7 @@ body.note-open { overflow: hidden; }
 
 .slide-head { margin-bottom: 0; }
 .kicker { font-size: clamp(0.7rem, 1.5vmin, 1.05rem); margin-bottom: 4px; }
-.slide-title { font-size: clamp(1.7rem, 5.6vmin, 4.4rem); }
+.slide-title { font-size: clamp(1.55rem, 4.6vmin, 3.9rem); }
 .lead { font-size: clamp(0.95rem, 2.1vmin, 1.5rem); }
 
 .big-forms {
@@ -1352,33 +1352,50 @@ body[data-niveau="expertes"] { --accent: #8fcbb6; --accent-soft: rgba(143, 203, 
   margin-top: 10px;
 }
 
+/* The chapter list is a two-column grid and must fit one screen: no scroll. */
+body.level-page { height: 100dvh; overflow: hidden; display: flex; flex-direction: column; }
+body.level-page .topbar { flex: none; }
+
 .level-main {
-  max-width: 1040px;
+  width: 100%;
+  max-width: 1280px;
   margin: 0 auto;
-  padding: clamp(24px, 5vh, 60px) clamp(18px, 4vw, 42px) 70px;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  padding: clamp(12px, 2.4vh, 30px) clamp(16px, 3vw, 38px) clamp(12px, 2.2vh, 26px);
 }
+.level-head { flex: none; }
 .level-head h1 {
-  font-size: clamp(2rem, 5.6vw, 3.6rem);
-  margin: 4px 0 10px;
+  font-size: clamp(1.65rem, 4.2vh, 3rem);
+  margin: 2px 0 6px;
   letter-spacing: -0.02em;
 }
-.level-head .lead { max-width: 66ch; }
+.level-head .lead { max-width: 90ch; font-size: clamp(0.85rem, 1.9vh, 1.1rem); }
 
 .chapter-list {
   list-style: none;
-  margin: clamp(22px, 4vh, 38px) 0 0;
+  margin: clamp(8px, 1.8vh, 18px) 0 0;
   padding: 0;
   display: grid;
-  gap: 8px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-rows: repeat(var(--chapter-rows, 7), minmax(0, 1fr));
+  grid-auto-flow: column;
+  grid-auto-rows: minmax(0, 1fr);
+  gap: 6px 10px;
+  flex: 1;
+  min-height: 0;
 }
-.chapter-list li { margin: 0; }
+.chapter-list li { margin: 0; min-height: 0; }
 .chapter-row {
   display: grid;
-  grid-template-columns: 46px minmax(0, 1fr) auto;
+  grid-template-columns: 34px minmax(0, 1fr) auto;
   align-items: center;
-  gap: 14px;
-  padding: 14px 18px;
-  border-radius: 14px;
+  height: 100%;
+  gap: 10px;
+  padding: clamp(5px, 1vh, 10px) 14px;
+  border-radius: 12px;
   border: 1px solid var(--line-soft);
   background: rgba(33, 28, 24, 0.55);
   color: var(--ink);
@@ -1401,22 +1418,96 @@ body[data-niveau="expertes"] { --accent: #8fcbb6; --accent-soft: rgba(143, 203, 
 .chapter-name strong {
   display: block;
   font-family: var(--sans);
-  font-size: 1rem;
+  font-size: clamp(0.8rem, 1.75vh, 1.05rem);
   font-weight: 600;
+  line-height: 1.2;
 }
 .chapter-name small {
   display: block;
-  margin-top: 2px;
+  margin-top: 1px;
   font-family: var(--sans);
-  font-size: 0.84rem;
+  font-size: clamp(0.68rem, 1.45vh, 0.86rem);
+  line-height: 1.25;
   color: var(--muted);
 }
 .chapter-go {
   font-family: var(--sans);
-  font-size: 0.8rem;
+  font-size: clamp(0.68rem, 1.4vh, 0.8rem);
   color: var(--accent);
   white-space: nowrap;
 }
+
+@media (max-height: 780px) {
+  .level-head .lead { display: none; }
+  .chapter-name small { display: none; }
+  .chapter-row { padding: 4px 12px; }
+  .chapter-list { gap: 4px 8px; }
+}
+
+@media (max-width: 780px) {
+  body.level-page { height: auto; min-height: 100dvh; overflow: auto; }
+  .chapter-list { grid-template-columns: 1fr; grid-template-rows: none; grid-auto-flow: row; grid-auto-rows: auto; }
+  .chapter-row { padding: 10px 14px; }
+  .chapter-name small { display: block; }
+}
+
+/* ---------- course blocks: definition, theorem, property, method, example ---------- */
+
+.slide-text .cblock { width: 100%; }
+.cblock {
+  width: 100%;
+  padding: 6px 11px;
+  border-left: 3px solid var(--accent);
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.18);
+}
+.cblock + .cblock { margin-top: 5px; }
+.cblock-tag {
+  margin: 0 0 2px;
+  font-family: var(--sans);
+  font-size: clamp(0.58rem, 1.05vmin, 0.8rem);
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.cblock p {
+  margin: 0 0 3px;
+  font-family: var(--sans);
+  font-size: clamp(0.78rem, 1.62vmin, 1.22rem);
+  line-height: 1.38;
+  color: var(--ink);
+}
+.cblock p:last-child { margin-bottom: 0; }
+.cblock ul,
+.cblock ol {
+  margin: 3px 0 0;
+  padding-left: 1.1em;
+  display: grid;
+  gap: 2px;
+  font-family: var(--sans);
+  font-size: clamp(0.75rem, 1.55vmin, 1.15rem);
+  line-height: 1.35;
+  color: var(--ink);
+}
+.cblock ul li::marker,
+.cblock ol li::marker { color: var(--accent); }
+.cblock.thm { border-left-color: #7cb0ff; }
+.cblock.thm .cblock-tag { color: #7cb0ff; }
+.cblock.prop .cblock-tag { color: var(--accent); }
+.cblock.meth { border-left-color: #b4a8f0; }
+.cblock.meth .cblock-tag { color: #b4a8f0; }
+.cblock.meth .steps { font-size: clamp(0.75rem, 1.55vmin, 1.15rem); gap: 2px; }
+.cblock.ex { border-left-color: #8fcbb6; }
+.cblock.ex .cblock-tag { color: #8fcbb6; }
+.cblock.rem { border-left-color: var(--line); }
+.cblock.rem .cblock-tag { color: var(--muted); }
+.cblock.rem p { color: var(--muted); }
+
+.frm { font-family: var(--serif); white-space: nowrap; }
+.formula.lg { font-size: clamp(1.05rem, 2.9vmin, 2.2rem); line-height: 1.4; }
+.slide-body.with-plot .formula.lg { font-size: clamp(1rem, 2.4vmin, 1.8rem); }
+.slide-body.with-plot .cblock p { font-size: clamp(0.74rem, 1.5vmin, 1.1rem); }
 
 /* ---------- slide body: text + figure ---------- */
 
@@ -1512,18 +1603,325 @@ body[data-niveau="expertes"] { --accent: #8fcbb6; --accent-soft: rgba(143, 203, 
   .chapter-go { display: none; }
 }
 
-/* ---------- matrices and overline (maths expertes) ---------- */
+/* ================================================================== */
+/* Render overhaul: tables, sign/variation tables, matrices, integrals */
+/* ================================================================== */
+
+/* ---------- data tables ---------- */
+
+.table-figure { margin: 0; width: 100%; min-width: 0; }
+.table-wrap.plain {
+  max-height: none;
+  overflow: visible;
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: linear-gradient(180deg, rgba(40, 34, 28, 0.62), rgba(28, 24, 20, 0.62));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+table.math.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: clamp(0.84rem, 1.95vmin, 1.22rem);
+  line-height: 1.45;
+  font-variant-numeric: tabular-nums;
+}
+table.math.data-table th,
+table.math.data-table td {
+  padding: clamp(8px, 1.2vh, 15px) clamp(11px, 1.6vw, 22px);
+  border-bottom: 1px solid var(--line-soft);
+  vertical-align: middle;
+}
+table.math.data-table thead th {
+  position: static;
+  background: rgba(0, 0, 0, 0.24);
+  font-family: var(--sans);
+  font-size: 0.72em;
+  letter-spacing: 0.12em;
+  text-transform: none;
+  color: var(--accent);
+  font-weight: 600;
+  white-space: nowrap;
+}
+.data-table tbody tr:last-child th,
+.data-table tbody tr:last-child td { border-bottom: 0; }
+.data-table tbody tr:nth-child(even) { background: rgba(255, 255, 255, 0.022); }
+.data-table tbody tr:hover { background: var(--accent-soft); }
+.data-table .rowhead {
+  text-align: left;
+  color: var(--muted);
+  font-family: var(--sans);
+  font-size: 0.9em;
+  font-weight: 500;
+  line-height: 1.35;
+  white-space: nowrap;
+}
+.data-table .cell-left { text-align: left; }
+.data-table .cell-center { text-align: center; }
+.data-table .cell-right { text-align: right; }
+.table-caption {
+  margin: 8px 2px 0;
+  font-family: var(--sans);
+  font-size: clamp(0.72rem, 1.4vmin, 0.92rem);
+  line-height: 1.4;
+  color: var(--muted);
+}
+
+/* ---------- sign and variation tables ---------- */
+
+.table-wrap.plain.vtable-wrap {
+  width: fit-content;
+  max-width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+table.math.vtable {
+  width: auto;
+  max-width: 100%;
+  margin: 0 auto;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-family: var(--serif);
+  font-size: clamp(0.95rem, 2.2vmin, 1.35rem);
+  font-variant-numeric: tabular-nums;
+}
+.vtable col.col-label { width: 5.4em; }
+.vtable col.col-bound { width: 5.6em; }
+.vtable col.col-arrow { width: 5.4em; }
+table.math.vtable th,
+table.math.vtable td {
+  padding: clamp(8px, 1.25vh, 16px) clamp(6px, 0.9vw, 12px);
+  text-align: center;
+  border-bottom: 1px solid var(--line-soft);
+  vertical-align: middle;
+}
+table.math.vtable thead th {
+  position: static;
+  background: rgba(0, 0, 0, 0.22);
+  font-family: var(--serif);
+  font-size: 1em;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--ink);
+  font-weight: 500;
+}
+.vtable tbody tr:last-child th,
+.vtable tbody tr:last-child td { border-bottom: 0; }
+.vtable .rowhead {
+  text-align: left;
+  color: var(--ink);
+  font-size: 1em;
+  font-style: italic;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.vtable thead .rowhead { color: var(--ink); font-weight: 600; }
+.vtable .vbound {
+  border-left: 1px solid var(--line);
+  border-right: 1px solid var(--line);
+}
+.vtable .vspan { padding-left: 2px; padding-right: 2px; }
+.vtable .vvalue { color: var(--ink); font-weight: 600; }
+.vtable .vzero { color: var(--accent); font-weight: 700; }
+.vtable .sign-pos { color: var(--ok); font-weight: 700; font-size: 1.15em; }
+.vtable .sign-neg { color: var(--bad); font-weight: 700; font-size: 1.15em; }
+.vtable .sign-zero { color: var(--accent); font-weight: 700; }
+.vtable .var-cell { padding-left: 2px; padding-right: 2px; }
+.var-arrow {
+  display: block;
+  width: 100%;
+  height: clamp(30px, 5vh, 54px);
+  margin: 0 auto;
+}
+.var-arrow path {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.sign-table .rowhead { min-width: 6.2em; }
+.sign-table td.vbound { font-size: 1.08em; }
+
+/* ---------- matrices ---------- */
 
 .matrix {
-  display: inline-grid;
-  grid-auto-flow: column;
-  gap: 0.2em 1.3em;
-  padding: 0.1em 0.5em;
-  border-left: 2px solid currentColor;
-  border-right: 2px solid currentColor;
-  border-radius: 2px;
+  display: inline-flex;
+  align-items: stretch;
   vertical-align: middle;
+  margin: 0 0.22em;
+  line-height: 1.15;
   font-variant-numeric: tabular-nums;
-  font-size: 0.92em;
+  font-size: 0.98em;
 }
+.mat-bracket {
+  flex: none;
+  width: 0.46em;
+  border-top: 1.6px solid currentColor;
+  border-bottom: 1.6px solid currentColor;
+}
+.mat-bracket:first-child {
+  border-left: 1.6px solid currentColor;
+  border-radius: 4px 0 0 4px;
+}
+.mat-bracket:last-child {
+  border-right: 1.6px solid currentColor;
+  border-radius: 0 4px 4px 0;
+}
+.mat-grid {
+  display: grid;
+  grid-template-columns: repeat(var(--mat-cols, 2), minmax(1.25em, auto));
+  gap: 0.18em 0.95em;
+  align-items: center;
+  padding: 0.34em 0.52em;
+  text-align: center;
+}
+.mat-cell { display: block; white-space: nowrap; }
+.mat-cell.mat-sep {
+  border-left: 1px dashed var(--muted);
+  margin-left: -0.35em;
+  padding-left: 0.75em;
+}
+button.mat-cell {
+  margin: 0;
+  padding: 0.04em 0.18em;
+  border: 0;
+  border-radius: 5px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+button.mat-cell:hover { background: var(--accent-soft); }
+.mat-cell.hl { background: var(--accent-soft); color: var(--accent); }
+.formula.has-matrix { font-size: clamp(1.15rem, 3vmin, 2.15rem); line-height: 1.6; }
+
+/* ---------- matrix product lab ---------- */
+
+.mat-lab {
+  width: 100%;
+  display: grid;
+  gap: 10px;
+  padding: clamp(10px, 1.5vh, 16px) clamp(12px, 1.6vw, 18px);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: rgba(0, 0, 0, 0.2);
+}
+.mat-products {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 10px 18px;
+}
+.mat-factor { display: inline-flex; align-items: center; gap: 6px; }
+.mat-name {
+  font-family: var(--serif);
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--ink);
+  opacity: 0.82;
+}
+[data-mat="AB"] button.mat-cell {
+  border-bottom: 1px dashed var(--accent-soft);
+  border-radius: 3px;
+}
+[data-mat="AB"] button.mat-cell:hover {
+  border-bottom-color: var(--accent);
+}
+.mat-times,
+.mat-eq { margin: 0 2px; color: var(--accent); font-size: 1.35rem; }
+.mat-hint {
+  margin: 0;
+  font-family: var(--sans);
+  font-size: clamp(0.78rem, 1.55vmin, 0.98rem);
+  line-height: 1.45;
+  text-align: center;
+  color: var(--muted);
+}
+.mat-hint strong { color: var(--ink); font-weight: 600; }
+.mat-lab .matrix { font-size: clamp(0.95rem, 2.35vmin, 1.35rem); }
+
+/* ---------- integrals, evaluation brackets, sums ---------- */
+
+.integral {
+  display: inline-grid;
+  grid-template-columns: auto auto;
+  grid-template-rows: 1fr 1fr;
+  align-items: center;
+  vertical-align: middle;
+  line-height: 1;
+  margin: 0 0.08em;
+}
+.int-sign {
+  grid-column: 1;
+  grid-row: 1 / span 2;
+  font-family: "Cambria Math", "STIX Two Math", "DejaVu Serif", var(--serif);
+  font-size: 2.35em;
+  font-weight: 400;
+  line-height: 0.78;
+}
+.int-standalone {
+  font-family: "Cambria Math", "STIX Two Math", "DejaVu Serif", var(--serif);
+  font-size: 1.35em;
+  line-height: 0.9;
+  vertical-align: -0.06em;
+}
+.cblock .integral .int-sign { font-size: 1.55em; }
+.cblock .integral .int-up,
+.cblock .integral .int-down { font-size: 0.5em; }
+.int-limits { display: contents; }
+.int-up,
+.int-down {
+  grid-column: 2;
+  padding-left: 0.12em;
+  font-size: 0.55em;
+  line-height: 1;
+  white-space: nowrap;
+}
+.int-up { grid-row: 1; align-self: end; }
+.int-down { grid-row: 2; align-self: start; }
+.formula.has-integral {
+  font-size: clamp(1.15rem, 3.1vmin, 2.2rem);
+  line-height: 1.6;
+  padding: clamp(10px, 1.6vh, 18px) clamp(12px, 1.6vw, 22px);
+}
+.formula.has-integral .int-sign { font-size: 2.45em; }
+
+.eval {
+  display: inline-grid;
+  grid-template-columns: auto auto;
+  grid-template-rows: 1fr 1fr;
+  align-items: center;
+  vertical-align: middle;
+  margin: 0 0.08em;
+  line-height: 1;
+}
+.eval-body { grid-column: 1; grid-row: 1 / span 2; }
+.eval-limits { display: contents; }
+.eval-limits span {
+  grid-column: 2;
+  padding-left: 0.14em;
+  font-size: 0.55em;
+  line-height: 1;
+}
+.eval-limits span:first-child { grid-row: 1; align-self: end; }
+.eval-limits span:last-child { grid-row: 2; align-self: start; }
+
+.sum {
+  display: inline-grid;
+  grid-template-columns: auto auto;
+  grid-template-rows: 1fr 1fr;
+  align-items: center;
+  vertical-align: middle;
+  margin: 0 0.1em;
+  line-height: 1;
+}
+.sum-sign { grid-column: 1; grid-row: 1 / span 2; font-size: 1.8em; line-height: 0.9; }
+.sum-limits { display: contents; }
+.sum-limits span { grid-column: 2; padding-left: 0.1em; font-size: 0.5em; line-height: 1; }
+.sum-limits span:first-child { grid-row: 1; align-self: end; }
+.sum-limits span:last-child { grid-row: 2; align-self: start; }
+
 .ovl { text-decoration: overline; }

@@ -5,29 +5,34 @@ aucun réseau**. Fait pour être projeté, manipulé, et relu à la maison.
 
 ## Contenu
 
-Quatre sections, chacune avec son propre sommaire :
+Trois sections, chacune avec son propre sommaire. Les chapitres suivent l’ordre et les
+intitulés des manuels de spécialité (Lelivrescolaire / Sésamath) :
 
 | Section | Chapitres | Diapos |
 | --- | --- | --- |
-| **Automatismes** | 7 | 20 |
-| **Première Spé** | 14 | 74 |
-| **Terminale Spé** | 15 | 67 |
-| **Maths Expertes** | 7 | 35 |
+| **Première Spé** | 12 | 102 |
+| **Terminale Spé** | 14 | 107 |
+| **Maths Expertes** | 7 | 57 |
 
-- **Automatismes** : fractions, puissances et racines, pourcentages, calcul littéral,
-  équations et inéquations, valeur absolue, dérivées usuelles.
-- **Première Spé** (programme 2026, BO n° 14 du 2 avril 2026) : second degré, polynômes
-  de degré 3, suites, suites arithmétiques et géométriques, dérivation, étude des
-  fonctions, exponentielle, trigonométrie, produit scalaire, géométrie repérée,
-  probabilités conditionnelles, variables aléatoires, échantillonnage, algorithmique.
-- **Terminale Spé** : limites de suites et de fonctions, continuité et TVI, convexité,
-  logarithme, exponentielles, trigonométrie, primitives, intégrales, équations
-  différentielles, combinatoire, loi binomiale, géométrie de l’espace.
-- **Maths Expertes** : nombres complexes (algèbre et géométrie), équations
-  polynomiales, arithmétique, graphes, matrices et chaînes de Markov.
+- **Première Spé** : suites numériques ; fonctions de référence ; équations et inéquations
+  du second degré ; dérivation ; applications de la dérivation ; fonction exponentielle ;
+  trigonométrie ; fonctions trigonométriques ; produit scalaire ; configurations
+  géométriques ; probabilités conditionnelles ; variables aléatoires réelles.
+- **Terminale Spé** : combinatoire et dénombrement ; vecteurs, droites et plans de
+  l’espace ; orthogonalité et distances ; suites ; limites de fonctions ; continuité ;
+  compléments sur la dérivation ; logarithme népérien ; fonctions trigonométriques ;
+  primitives et équations différentielles ; calcul intégral ; loi binomiale ; sommes de
+  variables aléatoires ; loi des grands nombres.
+- **Maths Expertes** : nombres complexes (points de vue algébrique et géométrique) ;
+  divisibilité dans ℤ ; PGCD et applications ; nombres premiers ; calcul matriciel et
+  applications aux graphes ; suites et matrices (chaînes de Markov).
 
-Une diapo = une notion : un titre, les formules en très grand, au plus une ligne de
-mots. Aucun exercice. Les figures gardent leurs curseurs de réglage.
+Une diapo = une notion du cours, avec les blocs utiles : **définition**, **théorème**,
+**propriété**, **méthode** et **exemple**. Aucun exercice. Les figures gardent leurs
+curseurs de réglage. Chaque chapitre couvre l’intégralité du cours du manuel correspondant.
+
+Le sommaire d’une classe est présenté en **deux colonnes** et tient sur un seul écran,
+sans défilement.
 
 ## Ouvrir
 
@@ -68,20 +73,18 @@ Le dessin est mémorisé en coordonnées « monde » et conservé quand on ferme
 
 | Fichier | Rôle |
 | --- | --- |
-| `index.html` | accueil : les quatre sections |
-| `niveau.html` | sommaire d’une section (`?n=premiere`) |
-| `cours.html` | diaporama d’un chapitre (`?n=premiere&c=second-degre`) |
-| `styles.css` | thème sombre chaud, mises en page, zoom des figures |
+| `index.html` | accueil : les trois sections |
+| `niveau.html` | sommaire d’une section (`?n=premiere`), en deux colonnes |
+| `cours.html` | diaporama d’un chapitre (`?n=premiere&c=suites`) |
+| `styles.css` | thème sombre chaud, mises en page, blocs de cours, zoom des figures |
 | `js/catalogue.js` | sections, chapitres et ordre des chapitres |
 | `js/hub.js`, `js/level.js` | rendu de l’accueil et des sommaires |
 | `js/deck.js` | moteur de diapos : navigation, sommaire, agrandissement, zoom |
-| `js/kit.js` | fabrique de diapos (titre, formules, ligne, figure) |
+| `js/kit.js` | fabrique de diapos (blocs définition/théorème/propriété/méthode/exemple, figures) |
 | `js/plots.js` | figures : repère, courbes, tangentes, aires, points |
 | `js/helpers.js` | formats français, fractions, racines, canvas net, curseurs |
 | `js/note.js` | page blanche de notes |
-| `js/slides-auto.js` | automatismes de base (fractions, puissances, pourcentages) |
-| `js/slides-trigo.js` | chapitre Trigonométrie (triangle, cercle, équations) |
-| `js/contenu-automatismes.js` | calcul littéral, équations, valeur absolue, dérivées |
+| `js/slides-trigo.js` | chapitre Trigonométrie : cercle, angles associés, équations interactives |
 | `js/contenu-premiere.js` | chapitres de Première Spé |
 | `js/contenu-terminale.js` | chapitres de Terminale Spé |
 | `js/contenu-expertes.js` | chapitres de Maths Expertes |
@@ -93,8 +96,11 @@ Kit.slide('chapitre-id', {
   id: 'chapitre-id-notion',
   kicker: 'Chapitre · 1',
   title: 'Titre court',
+  def: 'La définition, en une ou deux phrases.',
+  prop: ['Une propriété.', 'Une autre propriété.'],
   formula: ['f(x) = …'],
-  line: 'Une seule phrase.',
+  meth: ['Première étape.', 'Deuxième étape.'],
+  ex: 'Un exemple chiffré.',
   plot(canvas, panel) {
     return G.frame(canvas, panel, {
       view: { xmin: -4, xmax: 4, ymin: -4, ymax: 4 },
@@ -115,6 +121,7 @@ contenu dans `cours.html`. Les identifiants de diapo sont uniques dans tout le s
 
 ## Sources
 
-Programmes officiels (Première : BO n° 14 du 2 avril 2026 ; Terminale et Maths Expertes :
-programmes en vigueur), manuel Sésamath et manuel Lelivrescolaire, notes de cours
-Notion. Les diapos reformulent le cours ; elles ne recopient pas les manuels.
+Sommaires et cours des manuels de spécialité : **Lelivrescolaire** (Première spécialité
+2019 MAJ 2026, Terminale spécialité 2020, Terminale expertes 2020), **Sésamath**
+(Première spécialité 2019, Terminale spécialité 2020, Terminale expertes 2020) et notes
+de cours **Notion**. Les diapos reformulent le cours ; elles ne recopient pas les manuels.

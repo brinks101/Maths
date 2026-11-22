@@ -53,19 +53,26 @@ window.G = (function () {
     }
 
     const env = M.setupCanvas(canvas, (ctx, w, h, cam) => {
-      const s =
-        Math.min(w / (view.xmax - view.xmin), h / (view.ymax - view.ymin)) * cam.zoom;
+      const sx = (w / (view.xmax - view.xmin)) * cam.zoom;
+      const sy = (h / (view.ymax - view.ymin)) * cam.zoom;
+      const s = Math.min(sx, sy);
       const cx = (view.xmin + view.xmax) / 2;
       const cy = (view.ymin + view.ymax) / 2;
       const ox = w / 2 + cam.panX;
       const oy = h / 2 + cam.panY;
-      const map = (x, y) => [ox + (x - cx) * s, oy - (y - cy) * s];
+      // Most plots keep a true 1:1 scale. A probability chart can stretch the
+      // y axis so small convergence differences remain visible.
+      const map = spec.stretch
+        ? (x, y) => [ox + (x - cx) * sx, oy - (y - cy) * sy]
+        : (x, y) => [ox + (x - cx) * s, oy - (y - cy) * s];
       const fs = M.textScale(w, h, 420);
       const p = {
         ctx,
         w,
         h,
         s,
+        sx,
+        sy,
         map,
         fs,
         state,
@@ -73,10 +80,10 @@ window.G = (function () {
         cam,
         grid: showGrid,
         bounds: {
-          xmin: cx - ox / s,
-          xmax: cx + (w - ox) / s,
-          ymin: cy - (h - oy) / s,
-          ymax: cy + oy / s,
+          xmin: cx - ox / (spec.stretch ? sx : s),
+          xmax: cx + (w - ox) / (spec.stretch ? sx : s),
+          ymin: cy - (h - oy) / (spec.stretch ? sy : s),
+          ymax: cy + oy / (spec.stretch ? sy : s),
         },
       };
       bind(p);
@@ -117,8 +124,10 @@ window.G = (function () {
   function axes(p) {
     const { ctx, map, fs } = p;
     const b = p.bounds;
-    const step = niceStep(1 / p.s);
-    const dec = decimalsFor(step);
+    const xstep = niceStep(1 / (p.sx || p.s));
+    const ystep = niceStep(1 / (p.sy || p.s));
+    const xdec = decimalsFor(xstep);
+    const ydec = decimalsFor(ystep);
     const xAxis = Math.min(Math.max(0, b.ymin), b.ymax);
     const yAxis = Math.min(Math.max(0, b.xmin), b.xmax);
     const [ax, ay] = map(0, 0);
@@ -127,16 +136,16 @@ window.G = (function () {
     if (p.grid) {
       ctx.strokeStyle = GRID;
       ctx.lineWidth = 1;
-      for (let k = Math.ceil(b.xmin / step); k * step <= b.xmax; k += 1) {
-        const x = k * step;
+      for (let k = Math.ceil(b.xmin / xstep); k * xstep <= b.xmax; k += 1) {
+        const x = k * xstep;
         const [sx] = map(x, 0);
         ctx.beginPath();
         ctx.moveTo(sx, 0);
         ctx.lineTo(sx, p.h);
         ctx.stroke();
       }
-      for (let k = Math.ceil(b.ymin / step); k * step <= b.ymax; k += 1) {
-        const y = k * step;
+      for (let k = Math.ceil(b.ymin / ystep); k * ystep <= b.ymax; k += 1) {
+        const y = k * ystep;
         const [, sy] = map(0, y);
         ctx.beginPath();
         ctx.moveTo(0, sy);
@@ -159,23 +168,23 @@ window.G = (function () {
     ctx.textAlign = 'center';
     ctx.textBaseline = 'top';
     const labelY = Math.min(Math.max(0, Math.min(p.h - 20, ay + 6)), p.h - 16);
-    for (let k = Math.ceil(b.xmin / step); k * step <= b.xmax; k += 1) {
+    for (let k = Math.ceil(b.xmin / xstep); k * xstep <= b.xmax; k += 1) {
       if (!k) continue;
-      const v = k * step;
+      const v = k * xstep;
       const [sx] = map(v, 0);
       if (labelY > p.h - 24) continue;
-      ctx.fillText(M.com(v, dec), sx, labelY);
+      ctx.fillText(M.com(v, xdec), sx, labelY);
     }
 
     ctx.textAlign = 'right';
     ctx.textBaseline = 'middle';
     const labelX = Math.max(18, Math.min(p.w - 6, ax - 8));
-    for (let k = Math.ceil(b.ymin / step); k * step <= b.ymax; k += 1) {
+    for (let k = Math.ceil(b.ymin / ystep); k * ystep <= b.ymax; k += 1) {
       if (!k) continue;
-      const v = k * step;
+      const v = k * ystep;
       const [, sy] = map(0, v);
       if (labelX < 26) continue;
-      ctx.fillText(M.com(v, dec), labelX, sy);
+      ctx.fillText(M.com(v, ydec), labelX, sy);
     }
     ctx.fillStyle = 'rgba(246, 241, 232, 0.45)';
     ctx.textAlign = 'right';
@@ -291,6 +300,26 @@ window.G = (function () {
         ctx.strokeStyle = opts.stroke;
         ctx.lineWidth = 2;
         ctx.stroke();
+      }
+      ctx.restore();
+    };
+
+    // Filled rectangle in maths coordinates, used for Riemann sums.
+    p.rect = (x, y, w, h, o) => {
+      const opts = o || {};
+      const [x0, y0] = map(x, y);
+      const [x1, y1] = map(x + w, y + h);
+      const left = Math.min(x0, x1);
+      const top = Math.min(y0, y1);
+      const width = Math.abs(x1 - x0);
+      const height = Math.abs(y1 - y0);
+      ctx.save();
+      ctx.fillStyle = opts.fill || 'rgba(227, 199, 158, 0.18)';
+      ctx.fillRect(left, top, width, height);
+      if (opts.stroke) {
+        ctx.strokeStyle = opts.stroke;
+        ctx.lineWidth = opts.width || 1;
+        ctx.strokeRect(left, top, width, height);
       }
       ctx.restore();
     };
