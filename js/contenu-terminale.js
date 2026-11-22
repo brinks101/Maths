@@ -1273,7 +1273,7 @@
       'La fonction x ↦ ∫<sub>a</sub><sup>x</sup> f(t) dt est la primitive de f qui s’annule en a.',
     ],
     formula: ['∫<sub>a</sub><sup>b</sup> f(x) dx = [F(x)]<sub>a</sub><sup>b</sup> = F(b) − F(a)'],
-    ex: '∫<sub>1</sub><sup>3</sup> x² dx = [x³/3]₁³ = 27/3 − 1/3 = 26/3.',
+    ex: '∫<sub>1</sub><sup>3</sup> x² dx = [x³/3]<sub>1</sub><sup>3</sup> = 27/3 − 1/3 = 26/3.',
   });
 
   K.slide('integrale', {
@@ -1326,7 +1326,7 @@
       'Appliquer la formule.',
       'Calculer le crochet et la nouvelle intégrale.',
     ],
-    ex: '∫<sub>1</sub><sup>e</sup> ln x dx : u′ = 1, v = ln x, donc [x ln x]₁ᵉ − ∫<sub>1</sub><sup>e</sup> 1 dx = e − (e − 1) = 1.',
+    ex: '∫<sub>1</sub><sup>e</sup> ln x dx : u′ = 1, v = ln x, donc [x ln x]<sub>1</sub><sup>e</sup> − ∫<sub>1</sub><sup>e</sup> 1 dx = e − (e − 1) = 1.',
   });
 
   K.slide('integrale', {

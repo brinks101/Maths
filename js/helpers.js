@@ -72,7 +72,7 @@ window.M = (function () {
   // [F(x)]_a^b, with the evaluation bounds stacked on the right.
   function evalAt(body, a, b) {
     return (
-      `<span class="eval"><span class="eval-body">${body}</span>` +
+      `<span class="eval"><span class="eval-body">[${body}]</span>` +
       `<span class="eval-limits"><span>${b}</span><span>${a}</span></span></span>`
     );
   }
