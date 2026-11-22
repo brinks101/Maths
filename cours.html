@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Maths — cours</title>
+  <meta name="description" content="Diaporama de cours de mathématiques, une notion par diapo.">
+  <link rel="stylesheet" href="vendor/katex/katex.min.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <nav class="crumbs" aria-label="Fil d’Ariane">
+      <a href="index.html">Maths</a>
+      <span class="crumb-sep" aria-hidden="true">/</span>
+      <a id="crumb-level" href="index.html">…</a>
+      <span class="crumb-sep" aria-hidden="true">/</span>
+      <span class="crumb-here" id="crumb-chapter">…</span>
+    </nav>
+    <div class="topright">
+      <span class="counter" id="counter">1 / 1</span>
+      <button class="btn ghost small" id="menu-btn" type="button" aria-expanded="false" aria-controls="menu">Sommaire <kbd>M</kbd></button>
+    </div>
+  </header>
+
+  <div class="progress" aria-hidden="true"><span id="progress"></span></div>
+
+  <main class="stage" id="stage">
+    <section class="slide" id="slide" aria-live="polite"></section>
+  </main>
+
+  <footer class="toolbar">
+    <button class="btn" id="prev" type="button">← Précédent</button>
+    <span class="hint"><kbd>←</kbd><kbd>→</kbd> naviguer · <kbd>M</kbd> sommaire du chapitre · <kbd>F</kbd> plein écran · <kbd>N</kbd> note</span>
+    <button class="btn primary" id="next" type="button">Suivant →</button>
+  </footer>
+
+  <div class="menu" id="menu" hidden>
+    <div class="menu-panel" role="dialog" aria-modal="true" aria-label="Sommaire du cours">
+      <div class="menu-head">
+        <h2 id="menu-title">Sommaire</h2>
+        <div class="menu-head-actions">
+          <a class="btn ghost small" id="menu-level" href="niveau.html">Tous les chapitres</a>
+          <button class="btn ghost small" id="menu-close" type="button">Fermer <kbd>Échap</kbd></button>
+        </div>
+      </div>
+      <div class="menu-groups" id="menu-groups"></div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <noscript>Active JavaScript : tout le cours est interactif.</noscript>
+
+  <script src="vendor/katex/katex.min.js"></script>
+  <script src="js/math-render.js"></script>
+  <script src="js/helpers.js"></script>
+  <script src="js/plots.js"></script>
+  <script src="js/kit.js"></script>
+  <script src="js/catalogue.js"></script>
+  <script src="js/contenu-premiere.js"></script>
+  <script src="js/slides-trigo.js"></script>
+  <script src="js/contenu-terminale.js"></script>
+  <script src="js/contenu-expertes.js"></script>
+  <script src="js/deck.js"></script>
+  <script src="js/note.js"></script>
+</body>
+</html>
