@@ -57,6 +57,16 @@ window.M = (function () {
     );
   }
 
+  // KaTeX placeholder. The actual formula is rendered after the slide mounts.
+  function tex(source, display) {
+    const value = String(source == null ? '' : source)
+      .replace(/&/g, '&amp;')
+      .replace(/"/g, '&quot;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+    return `<span class="tex${display ? ' tex-display' : ''}" data-tex="${value}"${display ? ' data-display="1"' : ''}></span>`;
+  }
+
   // Large integral sign with stacked bounds: ∫_a^b.
   function integral(a, b) {
     const bounds =
@@ -361,6 +371,7 @@ window.M = (function () {
     frac,
     sqrt,
     mat,
+    tex,
     integral,
     evalAt,
     sum,

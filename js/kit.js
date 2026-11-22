@@ -181,11 +181,13 @@ window.Kit = (function () {
         `<div class="big-forms">${formulas
           .map((html) => {
             const body = P(html);
-            const extra = /class="integral"/.test(body)
-              ? ' has-integral'
-              : /class="matrix"/.test(body)
-                ? ' has-matrix'
-                : '';
+            const extra = /data-display="1"/.test(body)
+              ? ' has-katex'
+              : /class="integral"/.test(body)
+                ? ' has-integral'
+                : /class="matrix"/.test(body)
+                  ? ' has-matrix'
+                  : '';
             return `<div class="formula ${spec.size || 'lg'}${extra}">${body}</div>`;
           })
           .join('')}</div>`,

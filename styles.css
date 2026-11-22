@@ -1893,6 +1893,25 @@ button.mat-cell:hover { background: var(--accent-soft); }
   margin: 0 0.08em;
 }
 
+/* KaTeX is used for the integral chapter, where the notation needs real math
+   typesetting rather than HTML superscripts. */
+.tex { display: inline-block; max-width: 100%; }
+.tex-display { display: block; width: 100%; }
+.tex .katex { font-size: 1.02em; }
+.cblock .tex { margin: 0 0.06em; }
+.cblock .tex .katex { font-size: 1.24em; }
+.cblock p,
+.cblock ul { line-height: 1.45; }
+.formula.has-katex {
+  font-size: clamp(1.1rem, 2.9vmin, 2rem);
+  line-height: 1.25;
+  padding: clamp(10px, 1.6vh, 18px) clamp(12px, 1.6vw, 22px);
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+.formula.has-katex .katex { font-size: 1.14em; }
+.formula.has-katex .katex-display { margin: 0; }
+
 .eval {
   display: inline-grid;
   grid-template-columns: auto auto;

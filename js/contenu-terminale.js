@@ -8,6 +8,7 @@
   const G = window.G;
   const f = M.frac;
   const r = M.sqrt;
+  const T = M.tex;
   const C = G.colors;
 
   /* ==================== Combinatoire et dénombrement ==================== */
@@ -1167,10 +1168,14 @@
     kicker: 'Intégrale · 1',
     title: 'L’intégrale, une aire',
     def: [
-      'Si f est continue et positive sur [a ; b], l’intégrale ∫<sub>a</sub><sup>b</sup> f(x) dx est l’aire sous la courbe, entre l’axe des abscisses et la courbe, de x = a à x = b.',
+      'Si f est continue et positive sur [a ; b], l’intégrale ' +
+        T(String.raw`\int_a^b f(x)\,dx`) +
+        ' est l’aire sous la courbe, entre l’axe des abscisses et la courbe, de x = a à x = b.',
       'L’unité d’aire est celle du repère.',
     ],
-    formula: ['∫<sub>a</sub><sup>b</sup> f(x) dx = aire sous la courbe'],
+    formula: [
+      T(String.raw`\displaystyle \int_a^b f(x)\,dx = \text{aire sous la courbe}`, true),
+    ],
     plot(canvas, panel) {
       return G.frame(canvas, panel, {
         view: { xmin: -0.5, xmax: 5, ymin: -1, ymax: 6 },
@@ -1208,7 +1213,9 @@
     def: [
       'On découpe [a ; b] en n rectangles de largeur (b − a)/n. La somme de leurs aires approche l’intégrale, d’autant mieux que n est grand.',
     ],
-    formula: ['aire ≈ Σ f(x<sub>i</sub>) × (b − a)/n'],
+    formula: [
+      T(String.raw`\displaystyle \text{aire} \approx \sum f(x_i)\times\frac{b-a}{n}`, true),
+    ],
     plot(canvas, panel) {
       return G.frame(canvas, panel, {
         view: { xmin: 0, xmax: 5, ymin: 0, ymax: 7.2 },
@@ -1255,13 +1262,17 @@
     kicker: 'Intégrale · 3',
     title: 'Propriétés de l’intégrale',
     prop: [
-      'Linéarité : ∫(αf + βg) = α∫f + β∫g.',
-      'Relation de Chasles : ∫<sub>a</sub><sup>b</sup> f + ∫<sub>b</sub><sup>c</sup> f = ∫<sub>a</sub><sup>c</sup> f.',
-      'Si f ≥ 0 sur [a ; b], alors ∫<sub>a</sub><sup>b</sup> f ≥ 0 ; si f ≤ g, alors ∫f ≤ ∫g.',
-      '∫<sub>a</sub><sup>a</sup> f = 0 et ∫<sub>b</sub><sup>a</sup> f = −∫<sub>a</sub><sup>b</sup> f.',
+      'Linéarité : ' + T(String.raw`\int_a^b(\alpha f+\beta g)=\alpha\int_a^b f+\beta\int_a^b g`) + '.',
+      'Relation de Chasles : ' + T(String.raw`\int_a^b f+\int_b^c f=\int_a^c f`) + '.',
+      'Si ' + T(String.raw`f\ge 0`) + ' sur ' + T(String.raw`[a\,;b]`) + ', alors ' +
+        T(String.raw`\int_a^b f\ge 0`) + ' ; si ' + T(String.raw`f\le g`) + ', alors ' +
+        T(String.raw`\int_a^b f\le\int_a^b g`) + '.',
+      T(String.raw`\int_a^a f=0`) + ' et ' + T(String.raw`\int_b^a f=-\int_a^b f`) + '.',
     ],
-    formula: ['∫<sub>a</sub><sup>b</sup> (αf + βg) = α∫<sub>a</sub><sup>b</sup> f + β∫<sub>a</sub><sup>b</sup> g'],
-    ex: '∫<sub>0</sub><sup>1</sup> (2x + 3) dx = 2∫<sub>0</sub><sup>1</sup> x dx + 3∫<sub>0</sub><sup>1</sup> dx = 1 + 3 = 4.',
+    formula: [
+      T(String.raw`\displaystyle \int_a^b(\alpha f+\beta g)=\alpha\int_a^b f+\beta\int_a^b g`, true),
+    ],
+    ex: T(String.raw`\int_0^1(2x+3)\,dx=2\int_0^1 x\,dx+3\int_0^1 1\,dx=1+3=4`) + '.',
   });
 
   K.slide('integrale', {
@@ -1269,11 +1280,15 @@
     kicker: 'Intégrale · 4',
     title: 'Intégrale et primitive',
     thm: [
-      'Si f est continue sur [a ; b] et F est une primitive de f, alors ∫<sub>a</sub><sup>b</sup> f(x) dx = F(b) − F(a).',
-      'La fonction x ↦ ∫<sub>a</sub><sup>x</sup> f(t) dt est la primitive de f qui s’annule en a.',
+      'Si f est continue sur [a ; b] et F est une primitive de f, alors ' +
+        T(String.raw`\int_a^b f(x)\,dx=F(b)-F(a)`) + '.',
+      'La fonction ' + T(String.raw`x\mapsto\int_a^x f(t)\,dt`) +
+        ' est la primitive de f qui s’annule en a.',
     ],
-    formula: ['∫<sub>a</sub><sup>b</sup> f(x) dx = [F(x)]<sub>a</sub><sup>b</sup> = F(b) − F(a)'],
-    ex: '∫<sub>1</sub><sup>3</sup> x² dx = [x³/3]<sub>1</sub><sup>3</sup> = 27/3 − 1/3 = 26/3.',
+    formula: [
+      T(String.raw`\displaystyle \int_a^b f(x)\,dx=\bigl[F(x)\bigr]_a^b=F(b)-F(a)`, true),
+    ],
+    ex: T(String.raw`\int_1^3 x^2\,dx=\bigl[\frac{x^3}{3}\bigr]_1^3=\frac{27}{3}-\frac{1}{3}=\frac{26}{3}`) + '.',
   });
 
   K.slide('integrale', {
@@ -1281,11 +1296,14 @@
     kicker: 'Intégrale · 5',
     title: 'Valeur moyenne',
     def: [
-      'La valeur moyenne de f sur [a ; b] est μ = (1/(b − a)) ∫<sub>a</sub><sup>b</sup> f(x) dx.',
+      'La valeur moyenne de f sur [a ; b] est l’intégrale de f divisée par b − a.',
       'C’est la hauteur du rectangle de largeur b − a et d’aire égale à l’intégrale.',
     ],
-    formula: ['μ = ' + f('1', 'b − a') + ' ∫<sub>a</sub><sup>b</sup> f(x) dx'],
-    ex: 'La valeur moyenne de f(x) = x sur [0 ; 2] vaut 1 : le rectangle de hauteur 1 a la même aire que le triangle sous la droite.',
+    formula: [
+      T(String.raw`\displaystyle \mu=\frac{1}{b-a}\int_a^b f(x)\,dx`, true),
+    ],
+    ex: 'La valeur moyenne de ' + T(String.raw`f(x)=x`) + ' sur ' + T(String.raw`[0\,;2]`) +
+      ' vaut 1 : le rectangle de hauteur 1 a la même aire que le triangle sous la droite.',
   });
 
   K.slide('integrale', {
@@ -1298,7 +1316,8 @@
       'Calculer F(b) − F(a).',
       'Contrôler le signe du résultat avec la position de la courbe.',
     ],
-    ex: '∫<sub>0</sub><sup>1</sup> e<sup>x</sup> dx = e − 1 ; ∫<sub>0</sub><sup>π/2</sup> cos x dx = sin(π/2) − sin 0 = 1.',
+    ex: T(String.raw`\int_0^1 e^x\,dx=e-1`) + ' ; ' +
+      T(String.raw`\int_0^{\pi/2}\cos x\,dx=\sin(\pi/2)-\sin 0=1`) + '.',
   });
 
   K.slide('integrale', {
@@ -1306,11 +1325,17 @@
     kicker: 'Intégrale · 7',
     title: 'Aire entre deux courbes',
     prop: [
-      'Si f ≥ g sur [a ; b], l’aire entre les courbes y = f(x) et y = g(x) est ∫<sub>a</sub><sup>b</sup> (f − g)(x) dx.',
+      'Si ' + T(String.raw`f\ge g`) + ' sur ' + T(String.raw`[a\,;b]`) +
+        ', l’aire entre les courbes ' + T(String.raw`y=f(x)`) + ' et ' +
+        T(String.raw`y=g(x)`) + ' est ' + T(String.raw`\int_a^b(f-g)(x)\,dx`) + '.',
       'Si les courbes se croisent, on découpe l’intervalle aux points d’intersection et on prend la valeur absolue sur chaque morceau.',
     ],
-    formula: ['A = ∫<sub>a</sub><sup>b</sup> (f(x) − g(x)) dx'],
-    ex: 'Aire entre y = x² et y = x sur [0 ; 1] : ∫<sub>0</sub><sup>1</sup> (x − x²) dx = 1/2 − 1/3 = 1/6.',
+    formula: [
+      T(String.raw`\displaystyle A=\int_a^b(f(x)-g(x))\,dx`, true),
+    ],
+    ex: 'Aire entre ' + T(String.raw`y=x^2`) + ' et ' + T(String.raw`y=x`) +
+      ' sur ' + T(String.raw`[0\,;1]`) + ' : ' +
+      T(String.raw`\int_0^1(x-x^2)\,dx=\frac{1}{2}-\frac{1}{3}=\frac{1}{6}`) + '.',
   });
 
   K.slide('integrale', {
@@ -1318,26 +1343,37 @@
     kicker: 'Intégrale · 8',
     title: 'Intégration par parties',
     thm: [
-      'Si u et v sont dérivables à dérivées continues sur [a ; b], alors ∫<sub>a</sub><sup>b</sup> u′(x)v(x) dx = [u(x)v(x)]<sub>a</sub><sup>b</sup> − ∫<sub>a</sub><sup>b</sup> u(x)v′(x) dx.',
+      'Si u et v sont dérivables à dérivées continues sur [a ; b], alors ' +
+        T(String.raw`\int_a^b u'(x)v(x)\,dx=\bigl[u(x)v(x)\bigr]_a^b-\int_a^b u(x)v'(x)\,dx`) + '.',
     ],
-    formula: ['∫<sub>a</sub><sup>b</sup> u′v = [uv]<sub>a</sub><sup>b</sup> − ∫<sub>a</sub><sup>b</sup> uv′'],
+    formula: [
+      T(String.raw`\displaystyle \int_a^b u'v=\bigl[uv\bigr]_a^b-\int_a^b uv'`, true),
+    ],
     meth: [
       'Choisir u′ facile à primitiver et v′ facile à dériver.',
       'Appliquer la formule.',
       'Calculer le crochet et la nouvelle intégrale.',
     ],
-    ex: '∫<sub>1</sub><sup>e</sup> ln x dx : u′ = 1, v = ln x, donc [x ln x]<sub>1</sub><sup>e</sup> − ∫<sub>1</sub><sup>e</sup> 1 dx = e − (e − 1) = 1.',
+    ex: T(String.raw`\int_1^e\ln x\,dx`) + ' : ' + T(String.raw`u'=1`) + ', ' +
+      T(String.raw`v=\ln x`) + ', donc ' +
+      T(String.raw`\bigl[x\ln x\bigr]_1^e-\int_1^e 1\,dx=e-(e-1)=1`) + '.',
   });
 
   K.slide('integrale', {
     id: 'int-exemple',
     kicker: 'Intégrale · 9',
     title: 'Une aire complète',
-    def: ['Calculer l’aire du domaine compris entre y = x² − 4 et l’axe des abscisses.'],
+    def: [
+      'Calculer l’aire du domaine compris entre ' + T(String.raw`y=x^2-4`) +
+        ' et l’axe des abscisses.',
+    ],
     prop: [
-      'x² − 4 = 0 pour x = ±2, et x² − 4 ≤ 0 sur [−2 ; 2].',
-      'L’aire vaut −∫<sub>−2</sub><sup>2</sup> (x² − 4) dx = ∫<sub>−2</sub><sup>2</sup> (4 − x²) dx.',
-      'Une primitive est 4x − x³/3 ; le calcul donne (8 − 8/3) − (−8 + 8/3) = 32/3.',
+      T(String.raw`x^2-4=0`) + ' pour ' + T(String.raw`x=\pm2`) + ', et ' +
+        T(String.raw`x^2-4\le0`) + ' sur ' + T(String.raw`[-2\,;2]`) + '.',
+      'L’aire vaut ' +
+        T(String.raw`-\int_{-2}^2(x^2-4)\,dx=\int_{-2}^2(4-x^2)\,dx`) + '.',
+      'Une primitive est ' + T(String.raw`4x-\frac{x^3}{3}`) + ' ; le calcul donne ' +
+        T(String.raw`(8-\frac{8}{3})-(-8+\frac{8}{3})=\frac{32}{3}`) + '.',
     ],
     rem: 'On prend l’opposé lorsque la courbe est sous l’axe : une intégrale peut être négative, une aire est positive.',
   });
