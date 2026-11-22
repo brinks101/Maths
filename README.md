@@ -34,6 +34,11 @@ curseurs de réglage. Chaque chapitre couvre l’intégralité du cours du manue
 Le sommaire d’une classe est présenté en **deux colonnes** et tient sur un seul écran,
 sans défilement.
 
+## En ligne
+
+Le site est publié sur GitHub Pages : **<https://brinks101.github.io/Maths/>**.
+La branche `gh-pages` est mise à jour automatiquement à chaque push sur `main`.
+
 ## Ouvrir
 
 - Double-clic sur `index.html` (Chrome) : tout fonctionne en `file://`.
